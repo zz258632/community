@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发布</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.js" type="application/javascript"></script>
+
+</head>
+<body>
+<div th:insert="navigation::bar"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
+            <hr>
+            <form action="publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题（简单扼要）:</label>
+                    <input type="text" class="form-control" name="title" id="title" th:value="${session.title}" placeholder="问题标题...">
+                </div>
+                <div class="form-group">
+                    <label for="content">问题补充（请参照提示）:</label>
+                    <textarea name="content" id="content" class="form-control" th:text="${session.content}" cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tags">添加标签:</label>
+                    <input type="text" name="tags" id="tags" class="form-control" th:value="${session.tags}" placeholder="输入标签，以&quot;|&quot;隔开">
+                </div>
+                <div th:if="${session.publish!=null&&session.publish.equals('success')}" class="alert alert-success" role="alert">发布成功</div>
+                <div th:if="${session.publish!=null&&!session.publish.equals('success')}" class="alert alert-danger" th:text="${session.publish}"></div>
+                <button type="submit" class="btn btn-success btn-publish">发布</button>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+            <h3>问题发起指南</h3>
+            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>标题：选择一个简明扼要的标题，准确概括你的问题。避免使用模糊的标题，而是尽量具体描述你的问题。<br>
+            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>问题陈述：在问题的正文部分，清楚地陈述你的问题。提供足够的背景信息，以便其他人能够理解你的问题的上下文。确保问题陈述简洁明了，避免冗长的描述。<br>
+            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>具体细节：提供尽可能多的具体细节，以便其他人能够更好地理解你的问题。如果可能，提供相关的代码片段、错误信息或截图，这有助于其他人更好地理解你的问题并提供准确的答案。<br>
+        </div>
+    </div>
+</div>
+</body>
+</html>

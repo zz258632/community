@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${question.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css?version=1">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.js" type="application/javascript"></script>
+    <script src="/js/community.js?version=1"></script>
+</head>
+<body>
+<div th:insert="navigation::bar"></div>
+<div class="container-fluid main search">
+    <div class="row main">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h3><span th:text="${question.title}"></span></h3>
+            <span class="media-desc">
+                <a th:each="tag:${question.tags.split('\|')}">
+                    <span class="label label-info mySpan" th:text="${tag}"></span>
+                </a>
+                 | 作者 [[${question.user.account}]]
+                 | <span th:text="${#dates.format(question.creat_time,'yyyy.MM.dd HH:mm')}"></span>
+                 | [[${question.view_count}]] 次浏览
+            </span>
+            <hr>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.content}"></div>
+            <br>
+            <hr>
+            <a th:if="${question.user.account==session.account}" th:href="@{'/publish?id='+${question.id}}">
+                <span class="glyphicon glyphicon-pencil"></span>
+                编辑
+            </a>
+            <button class="icon glyphicon glyphicon-thumbs-up" th:onclick="questionLike([[${question.id}]])" th:text="${question.like_count}"></button>
+            <h3>[[${question.comment_count}]] 个回复</h3>
+            <hr>
+            <div class="media" th:each="comment:${comments}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded" src="https://img2.baidu.com/it/u=255089752,2114889504&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="...">
+                    </a>
+                </div>
+                <div class="media-body" >
+                    <h5 class="media-heading" th:text="${comment.user.account}">
+                    </h5>
+                    <h4 th:text="${comment.content}"></h4>
+                    <div class="menu">
+                        <button class="icon glyphicon glyphicon-thumbs-up" th:text="${comment.like_count}" th:onclick="commentLike([[${comment.id}]])"></button>
+                        <button class="icon glyphicon glyphicon-comment" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            [[${comment.childComments.size()}]]
+                        </button>
+                        <span class="pull-right" th:text="${#dates.format(comment.creat_time,'yyyy-MM-dd')}"></span>
+                    </div>
+                    <div id="collapseExample" class="collapse well col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="media" th:each="childComment:${comment.childComments}">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object img-rounded" src="https://img2.baidu.com/it/u=255089752,2114889504&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="...">
+                                </a>
+                            </div>
+                            <div class="media-body" >
+                                <h5 class="media-heading" id="childComment_account" th:text="${childComment.user.account}">
+                                </h5>
+                                <h4 th:text="${childComment.content}"></h4>
+                                <div class="menu">
+                                    <button class="icon glyphicon glyphicon-thumbs-up" th:text="${childComment.like_count}" th:onclick="commentLike([[${childComment.id}]])"></button>
+                                    <a th:onclick="reply([[${childComment.user.account}]])" class="pull-right">回复</a><br>
+                                    <span class="pull-right" th:text="${#dates.format(childComment.creat_time,'yyyy-MM-dd')}"></span>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div>
+                            <input type="hidden" id="comment_id" th:value="${comment.id}">
+                            <input type="hidden" id="comment_ids" th:value="${comment.id}">
+                            <textarea class="form-control" rows="2" style="margin: 10px 0" id="childComment_content" placeholder="评论一下..."></textarea>
+                            <br>
+                            <button type="button" class="btn btn-success pull-right" onclick="childPost()">回复</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div id="comment_section" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" src="https://img2.baidu.com/it/u=255089752,2114889504&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body" >
+                        <h4 class="media-heading" style="margin-top: 10px">
+                            <a th:text="${session.account}"></a>
+                        </h4>
+                    </div>
+                </div>
+                <input type="hidden" id="question_id" th:value="${question.id}">
+                <textarea class="form-control" rows="6" style="margin: 10px 0" id="comment_content"></textarea>
+                <button type="button" class="btn btn-success" style="float: right" onclick="post()">回复</button>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <h3>发起人</h3>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" src="https://img2.baidu.com/it/u=255089752,2114889504&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body" >
+                        <h4 class="media-heading" style="margin-top: 10px">
+                            <a th:text="${question.user.account}"></a>
+                        </h4>
+                    </div>
+                </div>
+            </div><br>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <h3>相关问题</h3>
+                <div style="line-height: 35px" th:if="${relatedQuestions!=null}" th:each="relatedQuestion:${relatedQuestions}">
+                    <a th:href="@{'/question/'+${relatedQuestion.id}}" th:text="${relatedQuestion.title}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

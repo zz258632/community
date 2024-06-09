@@ -1,0 +1,54 @@
+body{
+    background-color: #efefef;
+}
+.main{
+    background-color: white;
+    margin: 30px;
+}
+.btn-publish{
+    float: right;
+    margin-bottom: 15px;
+}
+.media-object{
+    width: 43px;
+    height: 43px;
+}
+.media-desc{
+    font-size:12px ;
+    font-weight: normal;
+    color: #999;
+}
+.search{
+    margin-left: 170px;
+    margin-right: 170px;
+}
+.menu{
+    font-weight: bolder;
+    color: #999;
+}
+.menu button{
+    float: left;
+    height: 28px;
+    padding: 0 10px;
+    color: #999;
+    line-height: 28px;
+    margin-bottom: 2px;
+}
+.myButton{
+    float: left;
+    height: 28px;
+    padding: 0 10px;
+    color: #999;
+    line-height: 28px;
+    margin-bottom: 2px;
+}
+.menu .icon{
+    margin-right: 10px;
+    cursor: pointer;
+}
+.menu .icon:hover{
+    color: #499ef3;
+}
+.mySpan{
+    font-size: 13px;
+}
